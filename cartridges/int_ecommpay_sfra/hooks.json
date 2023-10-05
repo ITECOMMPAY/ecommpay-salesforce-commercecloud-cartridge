@@ -1,0 +1,20 @@
+{
+	"hooks": [
+		{
+			"name": "app.payment.processor.ecommpay_credit",
+			"script": "./cartridge/scripts/hooks/payment/processor/ecommpay_credit"
+		},
+		{
+			"name": "app.payment.form.processor.ecommpay_credit",
+			"script": "./cartridge/scripts/hooks/payment/processor/ecommpay_credit"
+		},
+		{
+			"name": "app.payment.processor.ecommpay_apm",
+			"script": "./cartridge/scripts/hooks/payment/processor/ecommpay_apm"
+		},
+		{
+			"name": "app.payment.form.processor.ecommpay_apm",
+			"script": "./cartridge/scripts/hooks/payment/processor/ecommpay_apm"
+		}
+	]
+}

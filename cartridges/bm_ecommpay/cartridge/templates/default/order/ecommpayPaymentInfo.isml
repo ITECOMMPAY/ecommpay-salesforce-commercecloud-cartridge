@@ -1,0 +1,50 @@
+<isscript>
+	var order = pdict.Order;
+</isscript>
+
+<div class='ecommpay_payment_block'>
+	<h1 class="info_heading">Ecommpay Payment Info</h1>
+	<div class="info_row">
+		Operation type:
+		<strong>${order.custom.ecommpayOperationType || 'Awaiting notification'; }</strong>
+	</div>
+	<div class="info_row">
+		Payment ID:
+		<strong>${order.custom.ecommpayPaymentID || 'Awaiting notification'; }</strong>
+	</div>
+	<div class="info_row">
+		Payment method:
+		<strong>${order.custom.ecommpayPaymentMethod || 'Awaiting notification'; }</strong>
+	</div>
+	<div class="info_row">
+		Status:
+		<strong>${order.externalOrderStatus || 'Awaiting notification'; }</strong>
+	</div>
+</div>
+<style>
+	.ecommpay_payment_block {
+		border: 2px solid;
+		padding: 10px;
+		margin: 10px 0;
+	}
+
+	.ecommpay_payment_block .info_heading {
+		font-weight: bold;
+	}
+</style>
+<script>
+	if (typeof isEcommpayPaymentInfoElementsHidden === 'undefined') {
+		let isEcommpayPaymentInfoElementsHidden = false;
+
+		document.addEventListener('DOMContentLoaded', function () {
+			if (!isEcommpayPaymentInfoElementsHidden) {
+				let ecommpayPaymentInfoElements = document.querySelectorAll('.ecommpay_payment_block');
+				// Iterate through the elements starting from the second one
+				for (let i = 1; i < ecommpayPaymentInfoElements.length; i++) {
+					ecommpayPaymentInfoElements[i].style.display = 'none';
+				}
+				isEcommpayPaymentInfoElementsHidden = true;
+			}
+		});
+	}
+</script>

@@ -1,0 +1,46 @@
+<isset name="ecommpayHelper"
+         scope="page" value="${require(
+               '*/cartridge/scripts/ecommpay/helpers/ecommpayHelper')}"/>
+<isset name="isEcommpayEnabled"
+         scope="page" value="${ecommpayHelper.isEcommpayEnabled()}"/>
+<isset name="ecommpayCardDisplayMode"
+         scope="page" value="${ecommpayHelper.getEcommpayCardDisplayMode()}"/>
+
+<isloop
+    items="${pdict.order.billing.payment.applicablePaymentMethods}"
+    status="loopState" var="paymentOption">
+    <div class="tab-pane ${paymentOption.ID}-content ${loopState.first ? 'active' : ''}"
+          id="${paymentOption.ID}-content" role="tabpanel">
+        <fieldset class="payment-form-fields">
+            <input class="form-control" name="${pdict.forms.billingForm.paymentMethod.htmlName}"
+                     type="hidden"
+                     value="${paymentOption.ID}">
+            <!--            Selected ${paymentOption.name;} payment method.-->
+            <isif
+                condition="${ecommpayHelper.getPaymentProcessorFromPaymentMethodID(paymentOption.ID).getID() === 'ECOMMPAY_CREDIT'}">
+                <isif condition="${ecommpayCardDisplayMode === 'ECOMMPAY_EMBEDDED'}">
+                    <div id="ecommpay-embedded-iframe"></div>
+                </isif>
+
+
+                <iselse/>
+                <isif condition="${paymentOption.ID === 'CREDIT_CARD'}">
+                    <isinclude
+                        template="checkout/billing/paymentOptions/creditCardContent"/>
+                </isif>
+            </isif>
+
+            <div class="row">
+                <div data-errormsg="${Resource.msg('apm.error.fail', 'ecommpay', null)}" id="payment-element"
+                      style="width:100%">
+                </div>
+            </div>
+        </fieldset>
+    </div>
+</isloop>
+<isif condition="${isEcommpayEnabled && ecommpayCardDisplayMode === 'ECOMMPAY_EMBEDDED'}">
+    <script src="${URLUtils.staticURL('/js/ecommpayEmbeddedIframe.js').toString()}"></script>
+</isif>
+
+<iscomment>Fixes SF error, do not remove!</iscomment>
+<input class="form-control" id="cardNumber" type="hidden">

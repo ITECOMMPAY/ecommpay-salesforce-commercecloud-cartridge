@@ -1,0 +1,18 @@
+<isset name="ecommpayHelper"
+       scope="page" value="${require(
+               '*/cartridge/scripts/ecommpay/helpers/ecommpayHelper')}"/>
+
+<div class="payment-details">
+    <isif condition="${ecommpayHelper.isEcommpayEnabled()}">
+        <isinclude template="checkout/billing/paymentOptions/ecommpaySummary" />
+        <iselse/>
+<!--        Default SFRA code -->
+        <div class="payment-details">
+            <isloop items="${pdict.order.billing.payment.selectedPaymentInstruments}" var="payment">
+                <isif condition="${payment.paymentMethod === 'CREDIT_CARD'}">
+                    <isinclude template="checkout/billing/paymentOptions/creditCardSummary" />
+                </isif>
+            </isloop>
+        </div>
+    </isif>
+</div>

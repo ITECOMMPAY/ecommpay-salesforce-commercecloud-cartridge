@@ -1,0 +1,16 @@
+<isset name="ecommpayHelper"
+       scope="page" value="${require(
+           '*/cartridge/scripts/ecommpay/helpers/ecommpayHelper')}" />
+<isset name="isEcommpayEnabled"
+       scope="page"
+       value="${ecommpayHelper.isEcommpayEnabled()}" />
+<isset name="ecommpayCardDisplayMode"
+         scope="page"
+         value="${ecommpayHelper.getEcommpayCardDisplayMode()}" />
+<isif condition="${isEcommpayEnabled && ecommpayCardDisplayMode === 'ECOMMPAY_EMBEDDED'}">
+  <script src="${ecommpayHelper.getPaymentPageHost()}/shared/merchant.js" type="text/javascript"></script>
+  <link href="${ecommpayHelper.getPaymentPageHost()}/shared/merchant.css" rel="stylesheet" />
+</isif>
+<meta content='${isEcommpayEnabled}' name='isEcommpayEnabled'>
+<meta content='${ecommpayCardDisplayMode}' name='ecommpayCardDisplayMode'>
+<script src="${URLUtils.staticURL('/js/ecommpay.js').toString()}"></script>

@@ -1,0 +1,7 @@
+Redirecting, please wait...
+<script>
+    var redirectUrl = '${pdict.redirectUrl}';
+    var paramsJson = '${pdict.paramsJson}';
+</script>
+<script
+    src="${URLUtils.staticURL('/js/postAutoRedirect.js').toString()}"></script>

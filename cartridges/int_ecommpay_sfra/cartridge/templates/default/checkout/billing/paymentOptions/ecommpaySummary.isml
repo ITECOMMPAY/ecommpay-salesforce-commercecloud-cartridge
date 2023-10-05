@@ -1,0 +1,13 @@
+<isset name="PaymentMgr" scope="page" value="${require('dw/order/PaymentMgr')}"/>
+
+<isif condition="${pdict.order.billing.payment.selectedPaymentInstruments.length > 0}">
+    <div class="payment-method-summary">
+                <span class="ecommpay-payment-method-summary">${PaymentMgr.getPaymentMethod(
+                    pdict.order.billing.payment.selectedPaymentInstruments[0].paymentMethod)
+                    .getName();}</span>
+    </div>
+    <iselse/>
+    <div class="payment-method-summary">
+        <span class="ecommpay-payment-method-summary"></span>
+    </div>
+</isif>

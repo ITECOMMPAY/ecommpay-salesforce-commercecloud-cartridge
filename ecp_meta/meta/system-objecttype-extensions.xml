@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata xmlns="http://www.demandware.com/xml/impex/metadata/2006-10-31">
+    <type-extension type-id="OrderPaymentInstrument">
+        <custom-attribute-definitions>
+            <attribute-definition attribute-id="ecommpayCustomerID">
+                <display-name xml:lang="x-default">Ecommpay Customer ID</display-name>
+                <type>string</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <min-length>0</min-length>
+            </attribute-definition>
+        </custom-attribute-definitions>
+    </type-extension>
+
+    <type-extension type-id="Profile">
+        <custom-attribute-definitions>
+            <attribute-definition attribute-id="ecommpayCustomerID">
+                <display-name xml:lang="x-default">Ecommpay Customer ID</display-name>
+                <type>string</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <min-length>0</min-length>
+            </attribute-definition>
+        </custom-attribute-definitions>
+        <group-definitions>
+            <attribute-group group-id="Ecommpay">
+                <display-name xml:lang="x-default">Ecommpay</display-name>
+                <attribute attribute-id="ecommpayCustomerID"/>
+            </attribute-group>
+        </group-definitions>
+    </type-extension>
+
+    <type-extension type-id="SitePreferences">
+        <custom-attribute-definitions>
+            <attribute-definition attribute-id="isEcommpayEnabled">
+                <display-name xml:lang="x-default">Is Ecommpay Enabled</display-name>
+                <description xml:lang="x-default">
+                    If this setting is disabled, then all payment methods with Ecommpay processors will not be used on the
+					checkout page.
+                </description>
+                <type>boolean</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <default-value>false</default-value>
+            </attribute-definition>
+            <attribute-definition attribute-id="ecommpayСardDisplayMode">
+                <display-name xml:lang="x-default">Ecommpay Card Display Mode</display-name>
+                <type>enum-of-string</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <value-definitions>
+                    <value-definition>
+                        <display xml:lang="x-default">Redirect</display>
+                        <value>ECOMMPAY_REDIRECT</value>
+                    </value-definition>
+                    <value-definition default="true">
+                        <display xml:lang="x-default">Embedded</display>
+                        <value>ECOMMPAY_EMBEDDED</value>
+                    </value-definition>
+                </value-definitions>
+            </attribute-definition>
+
+            <attribute-definition attribute-id="ecommpayProjectId">
+                <display-name xml:lang="x-default">Ecommpay Project ID</display-name>
+                <description xml:lang="x-default">Your project ID you could get from ECommPay helpdesk. Leave it blank
+                    if test mode.
+                </description>
+                <type>string</type>
+                <mandatory-flag>true</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <min-length>0</min-length>
+            </attribute-definition>
+            <attribute-definition attribute-id="ecommpaySecretKey">
+                <display-name xml:lang="x-default">Ecommpay Secret Key</display-name>
+                <description xml:lang="x-default">Secret key which is used to sign payment request. You could get it
+                    from ECommPay helpdesk.
+                </description>
+                <type>password</type>
+                <mandatory-flag>true</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <min-length>0</min-length>
+            </attribute-definition>
+
+        </custom-attribute-definitions>
+        <group-definitions>
+            <attribute-group group-id="Ecommpay Config">
+                <display-name xml:lang="x-default">Ecommpay Configuration</display-name>
+                <attribute attribute-id="isEcommpayEnabled"/>
+                <attribute attribute-id="ecommpayСardDisplayMode"/>
+                <attribute attribute-id="ecommpayProjectId"/>
+					<attribute attribute-id="ecommpaySecretKey"/>
+            </attribute-group>
+        </group-definitions>
+    </type-extension>
+
+    <type-extension type-id="PaymentTransaction">
+        <custom-attribute-definitions>
+            <attribute-definition attribute-id="ecommpayOperationType">
+                <display-name xml:lang="x-default">Ecommpay Operation Type</display-name>
+                <description xml:lang="x-default">String {CREDIT|AUTH|CAPTURE}</description>
+                <type>string</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <min-length>0</min-length>
+            </attribute-definition>
+            <attribute-definition attribute-id="ecommpayOperationStatus">
+                <display-name xml:lang="x-default">Ecommpay Operation Status</display-name>
+                <description xml:lang="x-default">String {success|...}</description>
+                <type>string</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <min-length>0</min-length>
+            </attribute-definition>
+            <attribute-definition attribute-id="ecommpayProjectId">
+                <display-name xml:lang="x-default">Ecommpay Project ID</display-name>
+                <description xml:lang="x-default">ID of the site (project in Ecommpay)</description>
+                <type>string</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <min-length>0</min-length>
+            </attribute-definition>
+            <attribute-definition attribute-id="ecommpayOrderNumber">
+                <display-name xml:lang="x-default">Ecommpay Order Number</display-name>
+                <description xml:lang="x-default">ID of the order</description>
+                <type>string</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <min-length>0</min-length>
+            </attribute-definition>
+            <attribute-definition attribute-id="ecommpayTest1">
+                <display-name xml:lang="x-default">Ecommpay Test1</display-name>
+                <description xml:lang="x-default">Test1 desc</description>
+                <type>text</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+            </attribute-definition>
+            <attribute-definition attribute-id="ecommpayTest2">
+                <display-name xml:lang="x-default">Ecommpay Test2</display-name>
+                <description xml:lang="x-default">Test2 desc</description>
+                <type>boolean</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+            </attribute-definition>
+        </custom-attribute-definitions>
+        <group-definitions>
+            <attribute-group group-id="EcommpayTestGroup">
+                <display-name xml:lang="x-default">EcommpayTestGroup</display-name>
+                <attribute attribute-id="ecommpayTest1"/>
+                <attribute attribute-id="ecommpayTest2"/>
+            </attribute-group>
+        </group-definitions>
+    </type-extension>
+
+    <type-extension type-id="Basket">
+        <custom-attribute-definitions>
+            <attribute-definition attribute-id="ecommpayPaymentID">
+                <display-name xml:lang="x-default">Ecommpay Payment ID</display-name>
+                <description xml:lang="x-default">Ecommpay Payment ID</description>
+                <type>string</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+            </attribute-definition>
+            <attribute-definition attribute-id="ecommpayPaymentCurrency">
+                <display-name xml:lang="x-default">Ecommpay Payment Currency</display-name>
+                <description xml:lang="x-default">Ecommpay Payment Currency</description>
+                <type>string</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+            </attribute-definition>
+            <attribute-definition attribute-id="ecommpayPaymentAmount">
+                <display-name xml:lang="x-default">Ecommpay Payment Amount</display-name>
+                <description xml:lang="x-default">Ecommpay Payment Amount</description>
+                <type>string</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+            </attribute-definition>
+        </custom-attribute-definitions>
+    </type-extension>
+
+    <type-extension type-id="Order">
+        <custom-attribute-definitions>
+            <attribute-definition attribute-id="ecommpayPaymentID">
+                <display-name xml:lang="x-default">Ecommpay Payment ID</display-name>
+                <description xml:lang="x-default">Ecommpay Payment ID</description>
+                <type>string</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+            </attribute-definition>
+            <attribute-definition attribute-id="ecommpayOperationType">
+                <display-name xml:lang="x-default">Ecommpay Operation Type</display-name>
+                <description xml:lang="x-default">Ecommpay Operation Type</description>
+                <type>string</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+            </attribute-definition>
+            <attribute-definition attribute-id="ecommpayPaymentMethod">
+                <display-name xml:lang="x-default">Ecommpay Payment Method</display-name>
+                <description xml:lang="x-default">Ecommpay Payment Method</description>
+                <type>string</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+            </attribute-definition>
+            <attribute-definition attribute-id="ecommpayCustomerID">
+                <display-name xml:lang="x-default">Ecommpay Customer ID</display-name>
+                <description xml:lang="x-default">Ecommpay Customer ID</description>
+                <type>string</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+            </attribute-definition>
+			  <attribute-definition attribute-id="ecommpayPaymentStatus">
+				  <display-name xml:lang="x-default">Ecommpay Payment Status</display-name>
+				  <description xml:lang="x-default">Ecommpay Payment Status</description>
+				  <type>string</type>
+				  <mandatory-flag>false</mandatory-flag>
+				  <externally-managed-flag>false</externally-managed-flag>
+			  </attribute-definition>
+        </custom-attribute-definitions>
+    </type-extension>
+</metadata>

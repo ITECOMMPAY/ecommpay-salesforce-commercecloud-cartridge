@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<payment-settings xmlns="http://www.demandware.com/xml/impex/paymentsettings/2009-09-15">
+    <payment-method method-id="ECOMMPAY_CARD">
+        <name xml:lang="x-default">Card</name>
+        <enabled-flag>true</enabled-flag>
+        <processor-id>ECOMMPAY_CREDIT</processor-id>
+    </payment-method>
+    <payment-method method-id="ECOMMPAY_GOOGLEPAY">
+        <name xml:lang="x-default">Google Pay</name>
+        <enabled-flag>true</enabled-flag>
+        <processor-id>ECOMMPAY_APM</processor-id>
+    </payment-method>
+    <payment-method method-id="ECOMMPAY_APPLEPAY">
+        <name xml:lang="x-default">Apple Pay</name>
+        <enabled-flag>true</enabled-flag>
+        <processor-id>ECOMMPAY_APM</processor-id>
+    </payment-method>
+    <payment-method method-id="ECOMMPAY_OPEN_BANKING">
+        <name xml:lang="x-default">Open Banking</name>
+        <enabled-flag>true</enabled-flag>
+        <processor-id>ECOMMPAY_APM</processor-id>
+    </payment-method>
+</payment-settings>

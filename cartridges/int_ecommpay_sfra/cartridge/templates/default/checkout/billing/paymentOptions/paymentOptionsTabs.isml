@@ -1,0 +1,27 @@
+<isset name="ecommpayHelper"
+         scope="page" value="${require(
+               '*/cartridge/scripts/ecommpay/helpers/ecommpayHelper')}"/>
+<isset name="isEcommpayEnabled"
+         scope="page" value="${ecommpayHelper.isEcommpayEnabled()}"/>
+<isloop
+    items="${pdict.order.billing.payment.applicablePaymentMethods}"
+    status="loopState" var="paymentOption">
+    <isif condition="${ecommpayHelper.shouldShowPaymentMethod(paymentOption.ID)}">
+        <li class="nav-item"
+             data-method-id="${paymentOption.ID}">
+            <isset name="ecommpayPaymentProcessor" scope="page"
+                     value="${ecommpayHelper.getPaymentProcessorFromPaymentMethodID(paymentOption.ID)}"/>
+            <a class="nav-link ${paymentOption.ID}-tab ${loopState.first ? 'active' : ''}"
+                data-payment-method-id="${paymentOption.ID}"
+                data-payment-method-name="${paymentOption.name}"
+                data-payment-processor-id="${ecommpayPaymentProcessor.ID}"
+                data-toggle="tab"
+                href="${'#' + paymentOption.ID}-content" role="tab">
+                <img alt="${paymentOption.name}"
+                      class="ecommpay-credit-card-option"
+                      height="32" src="${ecommpayHelper.getPaymentMethodIcon(paymentOption.ID)}"
+                      title="${paymentOption.name}"/>
+            </a>
+        </li>
+    </isif>
+</isloop>
