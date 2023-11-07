@@ -1,27 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <payment-settings xmlns="http://www.demandware.com/xml/impex/paymentsettings/2009-09-15">
-
     <payment-method method-id="ECOMMPAY_CARD">
         <name xml:lang="x-default">Card</name>
         <name xml:lang="fr-FR">Carte de crédit</name>
         <name xml:lang="it-IT">Carta di credito</name>
         <name xml:lang="ja-JP">クレジットカード</name>
         <name xml:lang="zh-CN">信用卡</name>
+        <description xml:lang="x-default">You will be redirected to the payment page where you can pay by card</description>
         <enabled-flag>true</enabled-flag>
         <processor-id>ECOMMPAY_CREDIT</processor-id>
     </payment-method>
     <payment-method method-id="ECOMMPAY_GOOGLEPAY">
         <name xml:lang="x-default">Google Pay</name>
+        <description xml:lang="x-default">You will be redirected to the payment page where you can pay by Google Pay</description>
         <enabled-flag>true</enabled-flag>
         <processor-id>ECOMMPAY_APM</processor-id>
     </payment-method>
     <payment-method method-id="ECOMMPAY_APPLEPAY">
         <name xml:lang="x-default">Apple Pay</name>
+        <description xml:lang="x-default">You will be redirected to the payment page where you can pay by Apple Pay</description>
         <enabled-flag>true</enabled-flag>
         <processor-id>ECOMMPAY_APM</processor-id>
     </payment-method>
     <payment-method method-id="ECOMMPAY_OPEN_BANKING">
         <name xml:lang="x-default">Open Banking</name>
+        <description xml:lang="x-default">You will be redirected to the payment page where you can select the bank for payment</description>
         <enabled-flag>true</enabled-flag>
         <processor-id>ECOMMPAY_APM</processor-id>
     </payment-method>

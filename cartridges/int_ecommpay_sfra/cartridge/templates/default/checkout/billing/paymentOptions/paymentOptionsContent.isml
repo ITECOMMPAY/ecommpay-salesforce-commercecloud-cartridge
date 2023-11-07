@@ -9,26 +9,30 @@
 <isloop
     items="${pdict.order.billing.payment.applicablePaymentMethods}"
     status="loopState" var="paymentOption">
-    <div class="tab-pane ${paymentOption.ID}-content ${loopState.first ? 'active' : ''}"
+	<isscript>
+		let paymentMethod = ecommpayHelper.getPaymentMethodFromID(paymentOption.ID)
+        let paymentProcessor = ecommpayHelper.getPaymentProcessorFromPaymentMethodID(paymentOption.ID)
+	</isscript>
+    <div class="tab-pane ${paymentOption.ID}-content ${(loopState && loopState.first) ? 'active' : ''}"
           id="${paymentOption.ID}-content" role="tabpanel">
         <fieldset class="payment-form-fields">
             <input class="form-control" name="${pdict.forms.billingForm.paymentMethod.htmlName}"
                      type="hidden"
                      value="${paymentOption.ID}">
-            <!--            Selected ${paymentOption.name;} payment method.-->
-            <isif
-                condition="${ecommpayHelper.getPaymentProcessorFromPaymentMethodID(paymentOption.ID).getID() === 'ECOMMPAY_CREDIT'}">
+			  <isif condition="${paymentProcessor.getID() === 'ECOMMPAY_CREDIT'}">
                 <isif condition="${ecommpayCardDisplayMode === 'ECOMMPAY_EMBEDDED'}">
                     <div id="ecommpay-embedded-iframe"></div>
-                </isif>
-
-
                 <iselse/>
+                    ${paymentMethod.getDescription() || ''}
+                </isif>
+			 	<iselse/>
                 <isif condition="${paymentOption.ID === 'CREDIT_CARD'}">
                     <isinclude
                         template="checkout/billing/paymentOptions/creditCardContent"/>
+                <iselse/>
+                  ${paymentMethod.getDescription() || ''}
                 </isif>
-            </isif>
+        </isif>
 
             <div class="row">
                 <div data-errormsg="${Resource.msg('apm.error.fail', 'ecommpay', null)}" id="payment-element"

@@ -9,10 +9,10 @@ server.post('Receive', server.middleware.https, function (req, res, next) {
 	const paymentDataJson = req.httpParameterMap.requestBodyAsString;
 	Logger.debug(paymentDataJson);
 
-	let paymentData;
+	let callbackArray;
 
 	try {
-		paymentData = JSON.parse(paymentDataJson);
+		callbackArray = JSON.parse(paymentDataJson);
 	} catch (e) {
 		res.json({
 			message: "Couldn't prepare body (Bad json). " + e.message,
@@ -22,7 +22,7 @@ server.post('Receive', server.middleware.https, function (req, res, next) {
 	}
 
 	try {
-		gateHelper.handlePaymentInfo(paymentData);
+		gateHelper.handlePaymentCallback(callbackArray);
 	} catch (error) {
 		Logger.error(error.message);
 		res.json({

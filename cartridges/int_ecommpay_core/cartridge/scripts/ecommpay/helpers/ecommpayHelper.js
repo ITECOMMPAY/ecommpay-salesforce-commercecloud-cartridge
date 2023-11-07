@@ -51,7 +51,7 @@ exports.isEcommpayEnabled = isEcommpayEnabled;
  * @returns {string} Version
  */
 exports.getPluginVersion = function () {
-	return '1.0';
+	return '2.0.0';
 };
 
 /**
@@ -65,28 +65,56 @@ exports.getPPInterfaceTypeID = function () {
 /**
  * Get Ecommpay Payment Window type
  *
- * @return {Object} - PM Window type
+ * @return {string} - Redirect | Embedded
  */
-exports.getEcommpayCardDisplayMode = function () {
+function getEcommpayCardDisplayMode() {
 	return getCustomSitePreference('ecommpayСardDisplayMode').value;
-};
+}
 
+exports.getEcommpayCardDisplayMode = getEcommpayCardDisplayMode;
+
+/**
+ * Retrieves the value of the 'ecommpayPurchaseType' site preference.
+ *
+ * @return {string} Sale | Auth
+ */
+function getEcommpayPurchaseType() {
+	return getCustomSitePreference('ecommpayPurchaseType').value;
+}
+
+exports.getEcommpayPurchaseType = getEcommpayPurchaseType;
+
+/**
+ * Returns the host URL for the payment page.
+ *
+ * @return {string} The URL of the payment page host.
+ */
 exports.getPaymentPageHost = function () {
 	return 'https://paymentpage.ecommpay.com';
 };
 
+/**
+ * Retrieves the project ID from the custom site preference 'ecommpayProjectId'.
+ *
+ * @return {number} The project ID.
+ */
 exports.getProjectID = function () {
 	return Number(getCustomSitePreference('ecommpayProjectId'));
 };
 
+/**
+ * Retrieves the project salt token.
+ *
+ * @return {string} The project salt token.
+ */
 exports.getProjectSaltToken = function () {
 	return getCustomSitePreference('ecommpaySecretKey');
 };
 
 /**
- * Converts an object into a query string.
+ * Generates a query string from an object.
  *
- * @param {Object} obj - The object to convert.
+ * @param {Object} obj - The object to convert to a query string.
  * @return {string} The generated query string.
  */
 exports.objectToQueryString = function (obj) {
@@ -133,11 +161,13 @@ exports.excludeEmptyValues = function (obj) {
  * Formats the price based on the specified currency.
  *
  * @param {number} price - The price to be formatted.
- * @param {string} [currency='EUR'] - The currency to be used for formatting the price. Defaults to 'EUR'.
- * @return {number} The formatted price.
+ * @param {string} currency - The currency to be used for formatting the price. Defaults to 'EUR'.
+ * @return {number|null} The formatted price.
  */
 exports.formatPrice = function (price, currency) {
-	currency = currency || 'EUR';
+	if (price === null) {
+		return null;
+	}
 
 	if (NON_DECIMAL_CURRENCIES.includes(currency)) {
 		return Math.round(price);
@@ -172,12 +202,24 @@ exports.getLocaleFromRequest = function (req) {
 };
 
 /**
+ * Retrieves the payment method from the given method ID.
+ *
+ * @param {string} methodID - The ID of the payment method.
+ * @return {dw.order.PaymentMethod} The payment method associated with the given ID.
+ */
+function getPaymentMethodFromID(methodID) {
+	return PaymentMgr.getPaymentMethod(methodID);
+}
+exports.getPaymentMethodFromID = getPaymentMethodFromID;
+
+/**
  * Get payment processor from payment method ID
  * @param {string} methodID Payment method ID
  * @returns {dw.order.PaymentProcessor} Payment processor
  */
 function getPaymentProcessorFromPaymentMethodID(methodID) {
-	const method = PaymentMgr.getPaymentMethod(methodID);
+	const method = getPaymentMethodFromID(methodID);
+	if (!method) return null;
 	return method.getPaymentProcessor();
 }
 
@@ -229,10 +271,22 @@ exports.getPaymentMethodIcon = function (pmName) {
 function shouldShowPaymentMethod(paymentMethodID) {
 	const paymentProcessor =
 		getPaymentProcessorFromPaymentMethodID(paymentMethodID);
-	return !(
+	if (
 		!isEcommpayEnabled() &&
 		['ECOMMPAY_CREDIT', 'ECOMMPAY_APM'].includes(paymentProcessor.getID())
-	);
+	) {
+		return false;
+	}
+
+	if (
+		getEcommpayPurchaseType() === 'ECOMMPAY_AUTH' &&
+		paymentProcessor.getID() === 'ECOMMPAY_APM' &&
+		!['ECOMMPAY_APPLEPAY', 'ECOMMPAY_GOOGLEPAY'].includes(paymentMethodID)
+	) {
+		return false;
+	}
+
+	return true;
 }
 
 exports.shouldShowPaymentMethod = shouldShowPaymentMethod;

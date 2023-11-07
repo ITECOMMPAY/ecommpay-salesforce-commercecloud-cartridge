@@ -1,30 +1,36 @@
 {
 	"name": "ecommpay_sfcc",
-	"version": "1.0.0",
+	"version": "2.0.0",
 	"description": "Ecommpay Salesforce Commerce Cloud Payment Plugin",
 	"main": "index.js",
 	"engines": {
-		"node": ">=16.0.0 <17.0.0"
+		"node": ">=16.0.0"
 	},
 	"scripts": {
 		"compile:scss": "sgmf-scripts --compile css",
 		"compile:js": "sgmf-scripts --compile js",
 		"build": "npm run compile:js && npm run compile:scss",
 		"upload": "sgmf-scripts --upload -- ",
-		"uploadCartridge": "sgmf-scripts --uploadCartridge *ecommpay* && npm run uploadSfraBase",
-		"uploadSfraBase": "sgmf-scripts --uploadCartridge *_storefront_base && sgmf-scripts --uploadCartridge modules",
-		"watch": "concurrently \"npm:watch:*\"",
+		"uploadCartridge": "concurrently \"yarn:uploadEcommpayCartridge\" \"yarn:uploadSfraBase\"",
+		"uploadSfraBase": "concurrently \"yarn:uploadAsyncSfra*\"",
+		"uploadEcommpayCartridge": "concurrently \"yarn:uploadAsyncEcp*\"",
+		"uploadAsyncSfraBase": "sgmf-scripts --uploadCartridge app_storefront_base",
+		"uploadAsyncSfraBm": "sgmf-scripts --uploadCartridge bm_app_storefront_base",
+		"uploadAsyncSfraModules": "sgmf-scripts --uploadCartridge modules",
+		"uploadAsyncEcpCore": "sgmf-scripts --uploadCartridge int_ecommpay_core",
+		"uploadAsyncEcpSFRA": "sgmf-scripts --uploadCartridge int_ecommpay_sfra",
+		"uploadAsyncEcpBM": "sgmf-scripts --uploadCartridge bm_ecommpay",
+		"watch": "concurrently \"yarn:watch:*\"",
 		"watch:uploader": "sgmf-scripts --watch",
 		"watch:static": "sgmf-scripts --watch static",
 		"zipMetadata": "zip -rq ecp_meta.zip ecp_meta"
 	},
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/ITECOMMPAY/ecommpay-sfcc"
+		"url": "git@github.com:ITECOMMPAY/ecommpay-salesforce-commercecloud-cartridge.git"
 	},
-	"author": "Ecommpay <CHANGE_ME@gmail.com>",
 	"license": "ISC",
-	"homepage": "https://github.com/ITECOMMPAY",
+	"homepage": "https://github.com/ITECOMMPAY/ecommpay-salesforce-commercecloud-cartridge",
 	"dependencies": {
 		"@babel/core": "^7.22.9",
 		"@babel/eslint-parser": "^7.22.9",

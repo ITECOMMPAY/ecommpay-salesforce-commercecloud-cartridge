@@ -1,50 +1,186 @@
-<isscript>
-	var order = pdict.Order;
-</isscript>
+<isif condition="${!request.custom.ecommpayPaymentInfoLoaded}">
 
-<div class='ecommpay_payment_block'>
-	<h1 class="info_heading">Ecommpay Payment Info</h1>
-	<div class="info_row">
-		Operation type:
-		<strong>${order.custom.ecommpayOperationType || 'Awaiting notification'; }</strong>
-	</div>
-	<div class="info_row">
-		Payment ID:
-		<strong>${order.custom.ecommpayPaymentID || 'Awaiting notification'; }</strong>
-	</div>
-	<div class="info_row">
-		Payment method:
-		<strong>${order.custom.ecommpayPaymentMethod || 'Awaiting notification'; }</strong>
-	</div>
-	<div class="info_row">
-		Status:
-		<strong>${order.externalOrderStatus || 'Awaiting notification'; }</strong>
-	</div>
-</div>
-<style>
-	.ecommpay_payment_block {
-		border: 2px solid;
-		padding: 10px;
-		margin: 10px 0;
-	}
+    <isscript>
+        request.custom.ecommpayPaymentInfoLoaded = true;
+    </isscript>
+    <isset name="ecommpayHelper"
+             scope="page" value="${require(
+           '*/cartridge/scripts/ecommpay/helpers/ecommpayHelper')}" />
+    <isscript>
+        const order = pdict.Order;
+        const emptyValueLabel = "Awaiting notification";
+        const paymentInstrument = ecommpayHelper.getOrderLastPaymentInstrument(order);
+        const transactionAmount = paymentInstrument.getPaymentTransaction()
+            .getAmount().value;
+    </isscript>
+    <isinclude template="loadBMStaticContent" />
+     <meta content='${URLUtils.abs("EcommpayBM-PaymentStatus",
+             "paymentID", order.custom.ecommpayPaymentID)}' name='payment-status-url'>
+    <meta content='${order.custom.ecommpayPaymentID; }' name='payment-id'>
+    <meta content='${order.externalOrderStatus; }' name='payment-status'>
 
-	.ecommpay_payment_block .info_heading {
-		font-weight: bold;
-	}
-</style>
-<script>
-	if (typeof isEcommpayPaymentInfoElementsHidden === 'undefined') {
-		let isEcommpayPaymentInfoElementsHidden = false;
+    <div class="ecommpay-payment-block">
+        <h1 class="info-heading">Ecommpay Payment Info</h1>
+        <div class="info-row">
+            Operation type:&nbsp;
+            <strong>${order.custom.ecommpayOperationType || emptyValueLabel; }</strong>
+        </div>
+        <div class="info-row">
+            Payment ID:&nbsp;
+            <strong>${order.custom.ecommpayPaymentID || emptyValueLabel; }</strong>
+        </div>
+        <div class="info-row">
+            Payment method:&nbsp;
+            <strong>${order.custom.ecommpayPaymentMethod || emptyValueLabel; }</strong>
+        </div>
+        <div class="info-row">
+            Status:&nbsp;
+            <strong>${order.externalOrderStatus || emptyValueLabel; }</strong>
+        </div>
 
-		document.addEventListener('DOMContentLoaded', function () {
-			if (!isEcommpayPaymentInfoElementsHidden) {
-				let ecommpayPaymentInfoElements = document.querySelectorAll('.ecommpay_payment_block');
-				// Iterate through the elements starting from the second one
-				for (let i = 1; i < ecommpayPaymentInfoElements.length; i++) {
-					ecommpayPaymentInfoElements[i].style.display = 'none';
-				}
-				isEcommpayPaymentInfoElementsHidden = true;
-			}
-		});
-	}
-</script>
+            <isif condition="${paymentInstrument.getPaymentMethod() !== 'ECOMMPAY_OPEN_BANKING'}">
+                <isif condition="${order.custom.ecommpayActionRefund}">
+                    <isif condition="${!['refunded','reversal','partially refunded',
+                            'partially reversed']
+                                .includes(order.custom.ecommpayPaymentStatus)}">
+                     <span class="wait-for-response__text">
+                         Refund request has been sent, await the result. The page will be automatically refreshed.
+                     </span>
+                    </isif>
+                <iselse/>
+                    <isif condition="${['partially refunded','partially reversal','success'].includes(order.custom.ecommpayPaymentStatus)}">
+                        <div class="refund-button-wrapper">
+                            <button class="refund-button styled-button"
+                                      data-modal="refund-transaction-modal">
+                                Refund
+                            </button>
+                        </div>
+                    </isif>
+                </isif>
+            </isif>
+
+         <isif condition="${order.custom.ecommpayActionCapture}">
+             <isif condition="${!['success','canceled','partially refunded',
+                         'partially reversed', 'refunded'].includes(order.custom.ecommpayPaymentStatus)}">
+              <span class="wait-for-response__text">
+                  Capture/Cancel request has been sent, await the result. The page will be automatically refreshed.
+              </span>
+             </isif>
+         <iselse/>
+             <isif condition="${order.custom.ecommpayPaymentStatus === 'awaiting capture'}">
+                 <div class="row justify-content-around buttons-wrapper">
+                     <div class="capture-button-wrapper">
+                         <button class="capture-button styled-button"
+                                    data-modal="capture-transaction-modal">
+                             Capture
+                         </button>
+                     </div>
+                     <div class="cancel-button-wrapper">
+                         <button class="cancel-button styled-button styled-button-white"
+                                    data-modal="cancel-transaction-modal">
+                             Cancel payment
+                         </button>
+                     </div>
+                 </div>
+             </isif>
+         </isif>
+
+        <div class="custom-modal-background"></div>
+
+        <div class="custom-modal refund-transaction-modal" data-action='${URLUtils.abs("EcommpayBM-OrderAction")}'
+              data-method="POST">
+            <input class="modal-input" name="paymentID" type="hidden" value="${order.custom.ecommpayPaymentID; }">
+            <input class="modal-input" name="actionType" type="hidden" value="refund">
+			   <input class="modal-input" name="paymentMethod" type="hidden" value="${order.custom.ecommpayPaymentMethod}">
+            <div class="modal-header">
+                <h1 class="info-heading">Refund transaction</h1>
+                <button class="modal-close-button cross-button">X</button>
+            </div>
+            <div class="info-row">
+                Payment ID:&nbsp;
+                <b>${order.custom.ecommpayPaymentID || emptyValueLabel; }</b>
+            </div>
+            <div class="info-row">
+                Payment amount:&nbsp;
+                <b>${transactionAmount || emptyValueLabel;} ${order.getCurrencyCode() || emptyValueLabel;}</b>
+            </div>
+            <div class="info-row">
+                <label for="refundAmount">Refund:&nbsp;</label>
+                <input class="modal-input amount-input" id="refundAmount" max="${transactionAmount}" min="0.01"
+                         name="actionAmount" step="0.01" type="number">&nbsp;
+                <b>${order.getCurrencyCode() || emptyValueLabel;}</b>&nbsp;
+                <button class="amount-all-button styled-button styled-button-white">
+                    all
+                </button>
+            </div>
+            <button class="submit-button styled-button">
+                Submit
+            </button>
+        </div>
+
+        <div class="custom-modal capture-transaction-modal" data-action='${URLUtils.abs("EcommpayBM-OrderAction")}'
+              data-method="POST">
+            <input class="modal-input" name="paymentID" type="hidden" value="${order.custom.ecommpayPaymentID}">
+            <input class="modal-input" name="actionType" type="hidden" value="capture">
+            <input class="modal-input" name="paymentMethod" type="hidden" value="${order.custom.ecommpayPaymentMethod}">
+            <div class="modal-header">
+                <h1 class="info-heading">Capture transaction</h1>
+                <button class="modal-close-button cross-button">X</button>
+            </div>
+            <div class="info-row">
+                Payment ID:&nbsp;
+                <b>${order.custom.ecommpayPaymentID || emptyValueLabel; }</b>
+            </div>
+            <div class="info-row">
+                Authorization amount:&nbsp;
+                <b>${transactionAmount || emptyValueLabel;} ${order.getCurrencyCode() || emptyValueLabel;}</b>
+            </div>
+            <div class="info-row">
+                <label for="captureAmount">Capture:&nbsp;</label>
+                <input class="modal-input amount-input" id="captureAmount"
+                         max="${transactionAmount}" min="0.01"
+                         name="actionAmount" step="0.01" type="number">&nbsp;
+                <b>${order.getCurrencyCode() || emptyValueLabel;}</b>&nbsp;
+                <button class="amount-all-button styled-button styled-button-white">
+                    all
+                </button>
+            </div>
+            <button class="submit-button styled-button">
+                Submit
+            </button>
+        </div>
+
+        <div class="custom-modal cancel-transaction-modal" data-action='${URLUtils.abs("EcommpayBM-OrderAction")}'
+              data-method="POST">
+            <input class="modal-input" name="paymentID" type="hidden" value="${order.custom.ecommpayPaymentID}">
+            <input class="modal-input" name="actionType" type="hidden" value="cancel">
+            <input class="modal-input" name="paymentMethod" type="hidden" value="${order.custom.ecommpayPaymentMethod}">
+            <div class="modal-header">
+                <h1 class="info-heading">Cancel transaction</h1>
+                <button class="modal-close-button cross-button">X</button>
+            </div>
+            <div class="info-row">
+                Payment ID:&nbsp;
+                <b>${order.custom.ecommpayPaymentID || emptyValueLabel; }</b>
+            </div>
+            <div class="info-row">
+                Payment amount:&nbsp;
+                <b>${transactionAmount || emptyValueLabel;} ${order.getCurrencyCode() || emptyValueLabel;}</b>
+            </div>
+            <div class="info-row">
+                Are you sure wish to process this cancel?
+                This action cannot be undone.
+            </div>
+            <div class="row justify-content-between buttons-wrapper">
+                <button class="submit-button styled-button">
+						 Yes
+                </button>
+
+                <button class="modal-close-button styled-button styled-button-white">
+                    No
+                </button>
+            </div>
+        </div>
+
+    </div>
+</isif>

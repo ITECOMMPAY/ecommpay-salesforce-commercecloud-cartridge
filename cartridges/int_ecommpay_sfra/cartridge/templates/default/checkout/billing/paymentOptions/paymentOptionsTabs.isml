@@ -11,7 +11,7 @@
              data-method-id="${paymentOption.ID}">
             <isset name="ecommpayPaymentProcessor" scope="page"
                      value="${ecommpayHelper.getPaymentProcessorFromPaymentMethodID(paymentOption.ID)}"/>
-            <a class="nav-link ${paymentOption.ID}-tab ${loopState.first ? 'active' : ''}"
+            <a class="nav-link ${paymentOption.ID}-tab ${(loopState && loopState.first) ? 'active' : ''}"
                 data-payment-method-id="${paymentOption.ID}"
                 data-payment-method-name="${paymentOption.name}"
                 data-payment-processor-id="${ecommpayPaymentProcessor.ID}"

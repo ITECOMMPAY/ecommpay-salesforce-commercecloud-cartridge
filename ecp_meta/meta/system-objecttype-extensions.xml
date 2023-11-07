@@ -60,6 +60,23 @@
                 </value-definitions>
             </attribute-definition>
 
+            <attribute-definition attribute-id="ecommpayPurchaseType">
+                <display-name xml:lang="x-default">Ecommpay Purchase Type</display-name>
+                <type>enum-of-string</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <value-definitions>
+                    <value-definition default="true">
+                        <display xml:lang="x-default">Sale - One-step purchase</display>
+                        <value>ECOMMPAY_SALE</value>
+                    </value-definition>
+                    <value-definition>
+                        <display xml:lang="x-default">Auth - Two-step purchase</display>
+                        <value>ECOMMPAY_AUTH</value>
+                    </value-definition>
+                </value-definitions>
+            </attribute-definition>
+
             <attribute-definition attribute-id="ecommpayProjectId">
                 <display-name xml:lang="x-default">Ecommpay Project ID</display-name>
                 <description xml:lang="x-default">Your project ID you could get from ECommPay helpdesk. Leave it blank
@@ -87,8 +104,9 @@
                 <display-name xml:lang="x-default">Ecommpay Configuration</display-name>
                 <attribute attribute-id="isEcommpayEnabled"/>
                 <attribute attribute-id="ecommpayСardDisplayMode"/>
+                <attribute attribute-id="ecommpayPurchaseType"/>
                 <attribute attribute-id="ecommpayProjectId"/>
-					<attribute attribute-id="ecommpaySecretKey"/>
+				<attribute attribute-id="ecommpaySecretKey"/>
             </attribute-group>
         </group-definitions>
     </type-extension>
@@ -114,7 +132,7 @@
             <attribute-definition attribute-id="ecommpayProjectId">
                 <display-name xml:lang="x-default">Ecommpay Project ID</display-name>
                 <description xml:lang="x-default">ID of the site (project in Ecommpay)</description>
-                <type>string</type>
+                <type>password</type>
                 <mandatory-flag>false</mandatory-flag>
                 <externally-managed-flag>false</externally-managed-flag>
                 <min-length>0</min-length>
@@ -207,13 +225,27 @@
                 <mandatory-flag>false</mandatory-flag>
                 <externally-managed-flag>false</externally-managed-flag>
             </attribute-definition>
-			  <attribute-definition attribute-id="ecommpayPaymentStatus">
+			<attribute-definition attribute-id="ecommpayPaymentStatus">
 				  <display-name xml:lang="x-default">Ecommpay Payment Status</display-name>
 				  <description xml:lang="x-default">Ecommpay Payment Status</description>
 				  <type>string</type>
 				  <mandatory-flag>false</mandatory-flag>
 				  <externally-managed-flag>false</externally-managed-flag>
 			  </attribute-definition>
+            <attribute-definition attribute-id="ecommpayActionRefund">
+                <display-name xml:lang="x-default">Ecommpay Action Refund</display-name>
+                <description xml:lang="x-default">Ecommpay Action Refund</description>
+                <type>boolean</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+            </attribute-definition>
+            <attribute-definition attribute-id="ecommpayActionCapture">
+                <display-name xml:lang="x-default">Ecommpay Action Capture</display-name>
+                <description xml:lang="x-default">Ecommpay Action Capture</description>
+                <type>boolean</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+            </attribute-definition>
         </custom-attribute-definitions>
     </type-extension>
 </metadata>

@@ -1,3 +1,7 @@
+<isset name="isEcommpayEnabled"
+       scope="page" value="${require(
+               '*/cartridge/scripts/ecommpay/helpers/ecommpayHelper')
+           .isEcommpayEnabled()}"/>
 <span class="summary-section-label billing-addr-label">${Resource.msg('label.order.billing.address', 'confirmation',
     null);}</span><br/>
 <isif condition="${pdict.order.billing.billingAddress.address !== null}">
@@ -22,7 +26,7 @@
     <span
          class="summary-section-label payment-info-label">${Resource.msg('label.order.payment.info', 'confirmation',
          null);}</span>
-    <isif condition="${ecommpayHelper.isEcommpayEnabled()}">
+    <isif condition="${isEcommpayEnabled}">
         <isinclude
             template="checkout/billing/paymentOptions/ecommpaySummary"/>
         <iselse/>

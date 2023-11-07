@@ -33,7 +33,7 @@ server.get(
 		let query = req.querystring;
 		query += '&error=1';
 		res.render('ecommpay/postAutoRedirect', {
-			redirectUrl: URLUtils.url('Order-Confirm').toString(),
+			redirectUrl: URLUtils.url('Order-Reject').toString(),
 			paramsJson: encodeURIComponent(JSON.stringify(query)),
 		});
 		return next();

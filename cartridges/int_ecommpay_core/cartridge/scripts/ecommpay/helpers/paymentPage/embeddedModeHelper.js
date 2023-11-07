@@ -47,6 +47,13 @@ exports.getIframeParams = function (currentBasket, req) {
 	}
 	unRequiredParams = ecommpayHelper.excludeEmptyValues(unRequiredParams);
 
+	const purchaseTypeMap = {
+		ECOMMPAY_SALE: 'sale',
+		ECOMMPAY_AUTH: 'auth',
+	};
+
+	unRequiredParams.card_operation_type = purchaseTypeMap[ecommpayHelper.getEcommpayPurchaseType()];
+
 	const paymentPageParams = Object.assign(requiredParams, unRequiredParams);
 
 	const signature = ppURLGenerator.createSignature(

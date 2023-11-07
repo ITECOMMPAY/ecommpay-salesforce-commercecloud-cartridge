@@ -1,0 +1,12 @@
+<isif condition="${!request.custom.ecommpayStaticContentLoaded}">
+    <isset name="stringsHelper"
+             scope="page" value="${require(
+           '*/cartridge/scripts/ecommpay/helpers/stringsHelper')}" />
+
+    <script src="${URLUtils.staticURL('/js/ecommpayBusinessManager.js?v='+stringsHelper.generateRandomVersion())}"></script>
+    <link href="${URLUtils.staticURL('/css/ecommpayBusinessManagerStyle.css?v='+stringsHelper.generateRandomVersion())}" rel="stylesheet" />
+
+    <isscript>
+        request.custom.ecommpayStaticContentLoaded = true;
+    </isscript>
+</isif>

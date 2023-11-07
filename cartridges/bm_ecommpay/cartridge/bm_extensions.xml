@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<extensions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+				xmlns="http://www.demandware.com/xml/bmmodules/2007-12-11"
+				xsi:schemaLocation="http://www.demandware.com/xml/bmmodules/2007-12-11 bmext.xsd">
+	<!-- =============================================================== -->
+	<!-- ==                                                           == -->
+	<!-- ==  SITE   MENU   EXTENSIONS                                 == -->
+	<!-- ==                                                           == -->
+	<!-- =============================================================== -->
+
+	<menuitem id="ecommpaySite" position="0">
+		<name xml:lang="x-default">Ecommpay</name>
+		<short_description xml:lang="x-default">Ecommpay Integration</short_description>
+		<description xml:lang="x-default">Ecommpay Integration</description>
+		<icon>icons/channel_ico.gif</icon>
+	</menuitem>
+
+	<menuaction id="ecommpayRefund" menupath="ecommpaySite" position="0">
+		<name xml:lang="x-default">Ecommpay Order Action</name>
+		<short_description xml:lang="x-default">Ecommpay Order Action</short_description>
+		<description xml:lang="x-default">Ecommpay Order Action</description>
+		<exec pipeline="EcommpayBM" node="OrderAction"/>
+		<sub-pipelines>
+			<pipeline name="EcommpayBM"/>
+		</sub-pipelines>
+		<icon>icons/channel_ico.gif</icon>
+	</menuaction>
+
+</extensions>

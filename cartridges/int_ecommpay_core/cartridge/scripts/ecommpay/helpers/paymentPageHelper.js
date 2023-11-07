@@ -106,13 +106,6 @@ function createPaymentPageParameters(currentOrder, req, mode) {
 		}
 	}
 
-	unRequiredParams = ecommpayHelper.excludeEmptyValues(unRequiredParams);
-
-	const paymentPageParameters = Object.assign(
-		requiredParams,
-		unRequiredParams,
-	);
-
 	const paymentInstruments = currentOrder.getPaymentInstruments();
 
 	collections.forEach(paymentInstruments, function (paymentInstrument) {
@@ -124,28 +117,39 @@ function createPaymentPageParameters(currentOrder, req, mode) {
 		const paymentProcessorID = paymentProcessor.getID();
 
 		if (paymentProcessorID === 'ECOMMPAY_CREDIT') {
-			paymentPageParameters.force_payment_method = 'card';
+			unRequiredParams.force_payment_method = 'card';
 		}
 
 		switch (paymentMethodID) {
 			case 'ECOMMPAY_GOOGLEPAY': {
-				paymentPageParameters.force_payment_method = 'google_pay_host';
+				unRequiredParams.force_payment_method = 'google_pay_host';
 				break;
 			}
 			case 'ECOMMPAY_APPLEPAY': {
-				paymentPageParameters.force_payment_method = 'apple_pay_core';
+				unRequiredParams.force_payment_method = 'apple_pay_core';
 				break;
 			}
 			case 'ECOMMPAY_OPEN_BANKING': {
-				paymentPageParameters.force_payment_group = 'openbanking';
+				unRequiredParams.force_payment_group = 'openbanking';
 				break;
 			}
 			default:
 				break;
 		}
+
+		if (paymentProcessor.getID() === 'ECOMMPAY_CREDIT' || ['ECOMMPAY_APPLEPAY', 'ECOMMPAY_GOOGLEPAY'].includes(paymentMethodID)) {
+			const purchaseTypeMap = {
+				ECOMMPAY_SALE: 'sale',
+				ECOMMPAY_AUTH: 'auth',
+			};
+
+			unRequiredParams.card_operation_type = purchaseTypeMap[ecommpayHelper.getEcommpayPurchaseType()];
+		}
 	});
 
-	return paymentPageParameters;
+	unRequiredParams = ecommpayHelper.excludeEmptyValues(unRequiredParams);
+
+	return Object.assign(requiredParams, unRequiredParams);
 }
 
 exports.createPaymentPageParameters = createPaymentPageParameters;

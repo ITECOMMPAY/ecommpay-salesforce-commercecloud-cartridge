@@ -76,29 +76,34 @@ exports.createOrder = createOrder;
  * @param {dw.order.Order} currentOrder Order object
  */
 function updatePaymentTransaction(currentOrder) {
-	let customerID;
+	const paymentInstruments = currentOrder.getPaymentInstruments();
 
-	Transaction.wrap(function () {
-		const paymentInstruments = currentOrder.getPaymentInstruments();
-
-		collections.forEach(paymentInstruments, function (paymentInstrument) {
-			const transaction = paymentInstrument.getPaymentTransaction();
-			transaction.custom.ecommpayOperationType = 'sale';
-			transaction.type = PaymentTransaction.TYPE_CREDIT;
+	collections.forEach(paymentInstruments,
+		function (paymentInstrument) {
+			const paymentTransaction = paymentInstrument.getPaymentTransaction();
+			const purchaseTypeMap = {
+				ECOMMPAY_SALE: {
+					pp_type: 'sale',
+					sf_type: PaymentTransaction.TYPE_CREDIT
+				},
+				ECOMMPAY_AUTH: {
+					pp_type: 'auth',
+					sf_type: PaymentTransaction.TYPE_AUTH
+				},
+			};
+			paymentTransaction.custom.ecommpayOperationType = purchaseTypeMap[ecommpayHelper.getEcommpayPurchaseType()].pp_type;
+			paymentTransaction.type = purchaseTypeMap[ecommpayHelper.getEcommpayPurchaseType()].sf_type;
 		});
-
-		const customer = currentOrder.getCustomer();
-		if (customer) {
-			customerID = customer.getID();
-			currentOrder.custom.ecommpayCustomerID = customerID;
-		}
-	});
+	const customer = currentOrder.getCustomer();
+	if (customer) {
+		currentOrder.custom.ecommpayCustomerID = customer.getID();
+	}
 }
 
 exports.updatePaymentTransaction = updatePaymentTransaction;
 
 /**
- * Submits the order
+ * Submits the order (EMBEDDED and REDIRECT modes both).
  * @param {sfra.Request} req Request
  * @param {sfra.Response} res Response
  * @param {function} next Do next action on prepend method
@@ -325,9 +330,8 @@ exports.placeOrder = function (req, res, next) {
 		return null;
 	}
 
-	updatePaymentTransaction(currentOrder);
-
 	Transaction.wrap(function () {
+		updatePaymentTransaction(currentOrder);
 		// session.privacy.ecommpayOrderNumber = currentOrder.ecommpayOrderNumber
 		if (isEmbeddedPP) {
 			currentOrder.custom.ecommpayPaymentID =

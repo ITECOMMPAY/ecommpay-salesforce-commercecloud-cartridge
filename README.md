@@ -18,7 +18,7 @@ In order to process payments with actual debiting of funds, you should initially
 
 ### Installation
 
-1. Install [node.js version 16 LTS](https://nodejs.org/en/download).
+1. Install [node.js version LTS](https://nodejs.org/en/download).
 2. Run `npm install --global yarn`
 3. Run this commands in **SFRA** folder: `yarn install`; `yarn build`
 4. Copy all cartridges from **SFRA/cartridges** folder, and paste them into **Ecommpay Integration/cartridges** folder.
@@ -97,6 +97,12 @@ You can choose from the following options:
 Enable payment methods
 
 In the Business Manager, go to **Merchant Tools > Ordering > Payment methods**. Select "Yes" in the "Enabled" column for all supported methods in your project Ecommpay.
+
+Give access rights to manage your payments for your account.
+
+In the Business Manager, go to **Administration > Organization > Roles & Permissions**.
+Select your role, and choose **Business Manager Modules** tab. Select the sites you want to grant access to.
+Scroll down to **Ecommpay** category, and check it using checkbox on the right side. Click **Update**.
 
 ### Check result
 
